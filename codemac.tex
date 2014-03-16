@@ -1,0 +1,47 @@
+%% Copyright 2014 Douglas Moore. All rights reserved.
+%% Use of this source code is governed by the MIT
+%% license that can be found in the LICENSE file.
+
+\ifx\eplain\undefinde\input eplain\fi
+
+\chardef\other=12
+\def\startline{\noindent\hskip\parindent\ignorespaces}
+\newcount\tabstop
+\tabstop=2
+{\catcode`\^^M=\active % make CR an active character
+	\gdef\newlines{%
+		\catcode`\^^M=\active	% make CR an active character
+		\def^^M{\par\penalty10000\startline}}}
+{\catcode`\^^I=\active
+  \gdef\tabs{\catcode`\^^I=\active
+    \def^^I{\hskip\tabstop\fontdimen2\font \relax}}}
+\def\ttverbatim{\begingroup
+	\catcode`\\=\other
+	\catcode`\{=\other
+	\catcode`\}=\other
+	\catcode`\$=\other
+	\catcode`\&=\other
+	\catcode`\#=\other
+	\catcode`\%=\other
+	\catcode`\~=\other
+	\catcode`\_=\other
+	\catcode`\^=\other
+	\obeyspaces\tt\tabs\newlines}
+{\obeyspaces\gdef {\ }}
+\def\prechunk{\bigskip}
+\def\chunkheader#1{\noindent$\langle${\bf #1}$\rangle=$}
+\def\chunkfooter{}
+\def\postchunk{\bigskip}
+\outer\def\chunk#1{%
+	\prechunk
+	\chunkheader{#1}
+	\medskip
+	\begingroup
+		\let\par=\endgraf \ttverbatim \parskip=0pt%
+		\catcode`\|=0 \rightskip=-5pc \ttfinish}
+{\catcode`\|=0 |catcode`|\=\other%
+	|obeylines%
+	|gdef|ttfinish#1^^M\endchunk{#1|endgroup|endgroup|par|chunkfooter|postchunk}}
+\catcode`\|=\active
+{\obeylines\gdef|{\ttverbatim\spaceskip=\ttglue\let^^M=\ \let|=\endgroup}}
+
