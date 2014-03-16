@@ -38,11 +38,9 @@
 	\medskip
 	\begingroup
 		\let\par=\endgraf \ttverbatim \parskip=0pt%
-		\catcode`\@=0 \rightskip=-5pc \ttfinish}
-{\catcode`\@=0 @catcode`@\=\other%
-	@obeylines%
-	@gdef@ttfinish#1^^M\endchunk{%
-		@def@@{@char64}%
-		#1@endgroup@endgroup@par@chunkfooter@postchunk}}
-\catcode`\@=\active
-{\obeylines\gdef@{\ttverbatim\spaceskip=\ttglue\let^^M=\ \let@=\endgroup}}
+		\rightskip=-5pc \ttfinish}
+{\catcode`\^^?=0 catcode`\=\other%
+	obeylines%
+	gdefttfinish#1^^M\endchunk{#1endgroupendgroupparchunkfooterpostchunk}}
+\catcode`\=\active
+{\obeylines\gdef{\ttverbatim\spaceskip=\ttglue\let^^M=\ \let=\endgroup}}
