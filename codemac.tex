@@ -37,9 +37,9 @@
 	\chunkheader{#1}
 	\medskip
 	\begingroup
+		\parskip=0pt \rightskip=-5pc%
 		\ifx\chunkhook\undefined\else\chunkhook\fi%
-		\let\par=\endgraf \ttverbatim \parskip=0pt%
-		\rightskip=-5pc \ttfinish}
+		\let\par=\endgraf \ttverbatim\ttfinish}
 {\catcode`\^^?=0 catcode`\=\other%
 	obeylines%
 	gdefttfinish#1^^M\endchunk{#1parendgroupendgroupparchunkfooterpostchunk}}
