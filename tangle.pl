@@ -53,7 +53,7 @@ sub printchunk {
 					print STDERR "$_ -> ";
 				}
 				print STDERR "$2\n";
-				exit(3);
+				exit(4);
 			}
 			$linecount += printchunk($2,$context,$indent.$1);
 		} elsif ($inside && /^\s*\\endchunk\s*$/) {
@@ -76,10 +76,13 @@ sub printchunk {
 	}
 	if ($chunkstack[-1] =~ $chunkname) {
 		print STDERR "never exited chunk \"$chunkname\"\n";
-		exit(2);
+		exit(3);
 	}
-	if ($linecount == 0) {
+	if ($linecount == 0 && $line != 0) {
 		print STDERR "WARNING: empty chunk ($chunkname) found on line $chunkstartline\n";
+	} else {
+		print STDERR "ERROR: no chunk ($chunkname) found\n";
+		exit(2);
 	}
 	$linecount;
 }
