@@ -80,7 +80,7 @@ sub printchunk {
 	}
 	if ($linecount == 0 && $line != 0) {
 		print STDERR "WARNING: empty chunk ($chunkname) found on line $chunkstartline\n";
-	} else {
+	} else if ($linecount == 0) {
 		print STDERR "ERROR: no chunk ($chunkname) found\n";
 		exit(2);
 	}
