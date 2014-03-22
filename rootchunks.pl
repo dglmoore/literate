@@ -4,12 +4,17 @@
 
 #!/bin/env perl
 
+my %roots;
+
 my $linenum = 0;
 while (<>) {
   $linenum += 1;
   if (/^\s*\\chunk\{([^\} ]+)\}\s*$/) {
-    print "$1\n";
+    $roots{$1} = 1;
   } elsif (/^\s*\\chunk\{\s*\}\s*$/) {
     print STDERR "WARNING: unnamed chunk found on line $linenum\n";
   }
+}
+for (keys %roots) {
+	print "$_\n";
 }
