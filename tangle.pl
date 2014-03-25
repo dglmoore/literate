@@ -8,21 +8,28 @@ use Getopt::Long;
 
 my $tabs = '';
 my $tabstop = 2;
+my $linemacro = "#line %L \"%F\"";
 
 GetOptions("tabstop=i", \$tabstop,
-					 "tabs!", \$tabs)
-or die("error in command line arguments");
+					 "tabs!", \$tabs,
+					 "line=s", \$linemacro)
+or die("error in command line arguments: $!");
 
-if ($#ARGV != 0)
+if ($#ARGV != 1)
 {
-	print STDERR "must provide exactly one chunk\n";
+	print STDERR "must provide exactly one chunk and one filename\n";
 	exit(1);
 }
 
 my $chunkname = @ARGV[0];
-my @array = <STDIN>;
+my $filename = @ARGV[1];
+open(my $FH, "<", $filename)
+	or die("cannot open < file ($filename): $!");
+my @array = <$FH>;
+close($FH);
+$linemacro =~ s/%F/$filename/g;
 my $linecount = printchunk($chunkname, \@array, "");
-print STDERR "Read \"$chunkname\": $linecount line(s)\n";
+print STDERR "Read \"$chunkname\" from \"$filename\": $linecount line(s)\n";
 
 my @chunkstack = qw();
 sub printchunk {
@@ -44,6 +51,10 @@ sub printchunk {
 			$inside = 1;
 			$chunkstartline = $linenum;
 			push(@chunkstack,$chunkname);
+			if ($linemacro) {
+				(my $l = $linemacro) =~ s/%L/$linenum/g;
+				print "$l\n";
+			}
 		} elsif ($inside && /^\s*\\getchunk\{\s*\}\s*$/) {
 			print STDERR "WARNING: empty chunk request found at $linenum\n";
 		} elsif ($inside && /^(\s*)\\getchunk\{([^\}]+)\}\s*$/) {
@@ -56,6 +67,10 @@ sub printchunk {
 				exit(4);
 			}
 			$linecount += printchunk($2,$context,$indent.$1);
+			if ($linemacro) {
+				(my $l = $linemacro) =~ s/%L/($linenum+1)/ge;
+				print "$l\n";
+			}
 		} elsif ($inside && /^\s*\\endchunk\s*$/) {
 			if ($chunkstartline == $linenum - 1) {
 				print STDERR "WARNING: empty chunk ($chunkname) ".
@@ -78,7 +93,7 @@ sub printchunk {
 		print STDERR "never exited chunk \"$chunkname\"\n";
 		exit(3);
 	}
-	if ($linecount == 0 && $line != 0) {
+	if ($linecount == 0 && $linenum != 0) {
 		print STDERR "WARNING: empty chunk ($chunkname) found on line $chunkstartline\n";
 	} elsif ($linecount == 0) {
 		print STDERR "ERROR: no chunk ($chunkname) found\n";
