@@ -11,7 +11,7 @@
 {\catcode`\^^M=\active % make CR an active character
 	\gdef\newlines{%
 		\catcode`\^^M=\active	% make CR an active character
-		\def^^M{\par\penalty10000\startline}}}
+		\def^^M{\par\penalty9999\startline}}}
 {\catcode`\^^I=\active
   \gdef\tabs{\catcode`\^^I=\active
     \def^^I{\hskip\tabstop\fontdimen2\font \relax}}}
