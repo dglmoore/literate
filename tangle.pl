@@ -52,7 +52,7 @@ sub printchunk {
 			$chunkstartline = $linenum;
 			push(@chunkstack,$chunkname);
 			if ($linemacro) {
-				(my $l = $linemacro) =~ s/%L/$linenum/g;
+				(my $l = $linemacro) =~ s/%L/($linenum+1)/ge;
 				print "$l\n";
 			}
 		} elsif ($inside && /^\s*\\getchunk\{\s*\}\s*$/) {
