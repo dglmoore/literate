@@ -4,6 +4,13 @@
 # Use of this source code is governed by the MIT
 # license that can be found in the LICENSE file.
 
+use Getopt::Long;
+
+my $showleaves = '';
+
+GetOptions("leaves!", \$showleaves)
+or die("error in command line arguments: $!");
+
 my %roots;
 my %leaves;
 
@@ -22,6 +29,5 @@ while (<>) {
 }
 
 for (keys %roots) {
-	print "$_\n" if not exists $leaves{$_};
+  print "$_\n" if not (exists $leaves{$_} xor $showleaves);
 }
-
