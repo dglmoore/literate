@@ -6,9 +6,11 @@
 
 use Getopt::Long;
 
+my $showall = '';
 my $showleaves = '';
 
-GetOptions("leaves!", \$showleaves)
+GetOptions("all!", \$showall,
+           "leaves!", \$showleaves)
 or die("error in command line arguments: $!");
 
 my %roots;
@@ -29,5 +31,5 @@ while (<>) {
 }
 
 for (keys %roots) {
-  print "$_\n" if not (exists $leaves{$_} xor $showleaves);
+  print "$_\n" if $showall or not (exists $leaves{$_} xor $showleaves);
 }
