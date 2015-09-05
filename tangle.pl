@@ -47,7 +47,7 @@ sub printchunk {
 	}
 	foreach (@{$context}) {
 		$linenum += 1;
-		if (/^\s*\\chunk\{$chunkname\}\s*$/) {
+		if (/^\s*\\chunk\{\Q$chunkname\E\}\s*$/) {
 			$inside = 1;
 			$chunkstartline = $linenum;
 			push(@chunkstack,$chunkname);
@@ -89,7 +89,7 @@ sub printchunk {
 			$linecount += 1;
 		}
 	}
-	if ($chunkstack[-1] =~ $chunkname) {
+	if ($chunkstack[-1] =~ /^\Q$chunkname\E$/) {
 		print STDERR "never exited chunk \"$chunkname\"\n";
 		exit(3);
 	}
