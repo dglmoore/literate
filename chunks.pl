@@ -30,6 +30,6 @@ while (<>) {
   }
 }
 
-for (keys %roots) {
+for (sort(keys %roots)) {
   print "$_\n" if $showall or not (exists $leaves{$_} xor $showleaves);
 }
